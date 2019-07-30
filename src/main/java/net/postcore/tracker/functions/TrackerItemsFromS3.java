@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 
 import com.google.gson.Gson;
 
+import net.postcore.tracker.models.Product;
+
 import java.util.HashMap;
 
 public class TrackerItemsFromS3 implements RequestHandler<S3Event, String> {
@@ -61,13 +63,13 @@ public class TrackerItemsFromS3 implements RequestHandler<S3Event, String> {
 			HashMap<String, AttributeValue> map = new HashMap<>();
             
 		    map.put("id", AttributeValue.builder()
-		    	      .n(Integer.toString(product.id)).build());		    
+		    	      .n(Integer.toString(product.getId())).build());		    
 		    map.put("name", AttributeValue.builder()
-		    	      .s(product.name).build()); 		    
+		    	      .s(product.getName()).build()); 		    
 		    map.put("price", AttributeValue.builder()
-		    	      .n(Double.toString(product.price)).build());	
+		    	      .n(Double.toString(product.getPrice())).build());	
 		    map.put("quantity", AttributeValue.builder()
-		    	      .n(Integer.toString(product.quantity)).build());		    
+		    	      .n(Integer.toString(product.getQuantity())).build());		    
 						
 		    PutItemRequest request = PutItemRequest.builder()
 		    		.tableName("Products").item(map).build();
@@ -78,7 +80,7 @@ public class TrackerItemsFromS3 implements RequestHandler<S3Event, String> {
     		
 	          e.printStackTrace();
 	          context.getLogger().log(String.format(
-	              "Error adding " + product.id + " " + product.name + " to Products table"));
+	              "Error adding " + product.getId() + " " + product.getName() + " to Products table"));
 	          throw e;    		
     	}
     }

@@ -1,4 +1,4 @@
-package net.postcore.tracker.functions;
+package net.postcore.tracker.models;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +21,12 @@ public class HttpResponse<T> {
 		Gson gson = new Gson();
 		this.body = gson.toJson(element);
 	}
+	
+	public HttpResponse(String statusCode, String message) {
+		this();
+		this.statusCode = statusCode;
+		this.body = message;
+	}	
 	
 	public String getBody() {
 		return body;

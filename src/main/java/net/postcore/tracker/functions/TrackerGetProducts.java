@@ -11,13 +11,18 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedScanList;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.xray.AWSXRay;
+import com.amazonaws.xray.handlers.TracingHandler;
 
-import software.amazon.awssdk.regions.Region;
+import net.postcore.tracker.models.HttpResponse;
+import net.postcore.tracker.models.Product;
 
 public class TrackerGetProducts implements RequestHandler<Object, HttpResponse<List<Product>>> {
 
-	final Region region = Region.US_WEST_2;
-	final AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+	final AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
+			.withRegion("us-west-2")
+	        .withRequestHandlers(new TracingHandler(AWSXRay.getGlobalRecorder()))
+	        .build();
 	
 	@Override
 	public HttpResponse<List<Product>> handleRequest(Object input, Context context) {

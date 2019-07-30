@@ -1,7 +1,8 @@
-package net.postcore.tracker.functions;
+package net.postcore.tracker.models;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "Products")
@@ -30,7 +31,7 @@ public class Product {
 		this.id = id;
 	}
 	
-	@DynamoDBAttribute(attributeName = "name") 
+	@DynamoDBRangeKey(attributeName = "name") 
 	public String getName() {
 		return name;
 	}
