@@ -8,12 +8,16 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import net.postcore.tracker.models.LambdaRequest;
+import net.postcore.tracker.models.LambdaResponse;
+import net.postcore.tracker.models.Product;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
 public class TrackerProductOpsTest {
 
-    private static Object input;
+    private static LambdaRequest input;
 
     @BeforeClass
     public static void createInput() throws IOException {
@@ -35,7 +39,7 @@ public class TrackerProductOpsTest {
         TrackerProductOps handler = new TrackerProductOps();
         Context ctx = createContext();
 
-        String output = handler.handleRequest(input, ctx);
+        LambdaResponse<Product> output = handler.handleRequest(input, ctx);
 
         // TODO: validate output here if needed.
         Assert.assertEquals("Hello from Lambda!", output);

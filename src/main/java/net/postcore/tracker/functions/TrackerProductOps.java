@@ -15,11 +15,11 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.xray.AWSXRay;
 import com.amazonaws.xray.handlers.TracingHandler;
 import com.google.gson.Gson;
-import net.postcore.tracker.models.HttpRequest;
-import net.postcore.tracker.models.HttpResponse;
+import net.postcore.tracker.models.LambdaRequest;
+import net.postcore.tracker.models.LambdaResponse;
 import net.postcore.tracker.models.Product;
 
-public class TrackerProductOps implements RequestHandler<HttpRequest, HttpResponse<Product>> {
+public class TrackerProductOps implements RequestHandler<LambdaRequest, LambdaResponse<Product>> {
 
 	final AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
 			.withRegion("us-west-2")
@@ -27,7 +27,7 @@ public class TrackerProductOps implements RequestHandler<HttpRequest, HttpRespon
 	        .build();
 			
     @Override
-    public HttpResponse<Product> handleRequest(HttpRequest input, Context context) {
+    public LambdaResponse<Product> handleRequest(LambdaRequest input, Context context) {
         context.getLogger().log("Input: " + input.toString());
 		
         Product product;
@@ -44,10 +44,13 @@ public class TrackerProductOps implements RequestHandler<HttpRequest, HttpRespon
         } catch (Exception e) {
         	context.getLogger().log("Error: " + e.getMessage());
         	context.getLogger().log("Stack trace: " + e.getStackTrace());
-        	return new HttpResponse<Product>("500", e.getMessage());
+        	return new LambdaResponse<Product>("500", e.getMessage());
         }
         
-        return new HttpResponse<Product>(product);
+        if (product == null)
+        	return new LambdaResponse<Product>("400", "item not found!");
+        
+        return new LambdaResponse<Product>(product);
     }
     
     private Product getProduct(String productId, Context context) {
@@ -68,7 +71,7 @@ public class TrackerProductOps implements RequestHandler<HttpRequest, HttpRespon
         return product;    	
     }
     
-    private Product updateProduct(String productId, HttpRequest input, Context context) {
+    private Product updateProduct(String productId, LambdaRequest input, Context context) {
 		Product product = new Gson().fromJson(input.getBody(), Product.class);
 		
 		HashMap<String, AttributeValue> map = new HashMap<>();

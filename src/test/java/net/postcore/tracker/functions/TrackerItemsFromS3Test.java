@@ -59,7 +59,7 @@ public class TrackerItemsFromS3Test {
 
     @Test
     public void testTrackerItemsFromS3() {
-        TrackerItemsFromS3 handler = new TrackerItemsFromS3(s3Client);
+        TrackerItemsFromS3 handler = new TrackerItemsFromS3();
         Context ctx = createContext();
 
         String output = handler.handleRequest(event, ctx);

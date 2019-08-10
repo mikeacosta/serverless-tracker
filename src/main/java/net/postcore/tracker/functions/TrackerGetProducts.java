@@ -14,10 +14,10 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.xray.AWSXRay;
 import com.amazonaws.xray.handlers.TracingHandler;
 
-import net.postcore.tracker.models.HttpResponse;
+import net.postcore.tracker.models.LambdaResponse;
 import net.postcore.tracker.models.Product;
 
-public class TrackerGetProducts implements RequestHandler<Object, HttpResponse<List<Product>>> {
+public class TrackerGetProducts implements RequestHandler<Object, LambdaResponse<List<Product>>> {
 
 	final AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
 			.withRegion("us-west-2")
@@ -25,7 +25,7 @@ public class TrackerGetProducts implements RequestHandler<Object, HttpResponse<L
 	        .build();
 	
 	@Override
-	public HttpResponse<List<Product>> handleRequest(Object input, Context context) {
+	public LambdaResponse<List<Product>> handleRequest(Object input, Context context) {
 		
 		DynamoDBMapper mapper = new DynamoDBMapper(client);
 		PaginatedScanList<Product> scanList = mapper.scan(Product.class, new DynamoDBScanExpression());
@@ -37,7 +37,7 @@ public class TrackerGetProducts implements RequestHandler<Object, HttpResponse<L
 			list.add(product);
 		}
 		
-		HttpResponse<List<Product>> response = new HttpResponse<List<Product>>(list);
+		LambdaResponse<List<Product>> response = new LambdaResponse<List<Product>>(list);
 		
 		return response;
 	}

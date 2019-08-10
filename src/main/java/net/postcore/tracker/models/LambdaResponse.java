@@ -5,24 +5,24 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
-public class HttpResponse<T> {
+public class LambdaResponse<T> {
 
 	private String body;
 	private String statusCode = "200";
 	private Map<String, String> headers = new HashMap<String, String>();
 	
-	public HttpResponse() {
+	public LambdaResponse() {
 		super();
 		this.headers.put("Content-Type", "application/json");
 	}
 	
-	public HttpResponse(T element) {
+	public LambdaResponse(T element) {
 		this();
 		Gson gson = new Gson();
 		this.body = gson.toJson(element);
 	}
 	
-	public HttpResponse(String statusCode, String message) {
+	public LambdaResponse(String statusCode, String message) {
 		this();
 		this.statusCode = statusCode;
 		this.body = message;
@@ -45,5 +45,5 @@ public class HttpResponse<T> {
 	}
 	public void setHeaders(Map<String, String> headers) {
 		this.headers = headers;
-	}
+	}	
 }
